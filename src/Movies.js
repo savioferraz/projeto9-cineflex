@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export default function Movies() {
-  const [movies, setItens] = useState([]);
+  const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     const promise = axios.get(
@@ -12,7 +12,7 @@ export default function Movies() {
     );
 
     promise.then((res) => {
-      setItens(res.data);
+      setMovies(res.data);
     });
   }, []);
 
@@ -21,7 +21,7 @@ export default function Movies() {
       <Title>Selecione o filme</Title>
       <MoviesList>
         {movies.map((movie) => (
-          <Cover>
+          <Cover key={movie.id}>
             <Link to={`/sessoes/${movie.id}`}>
               <img src={movie.posterURL} alt=""></img>
             </Link>

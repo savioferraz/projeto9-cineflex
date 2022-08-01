@@ -6,7 +6,7 @@ import { Content, Title } from "./Movies";
 import Bottom from "./Bottom";
 
 export default function Sessions() {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState({});
   const { idFilme } = useParams();
 
   useEffect(() => {
@@ -23,21 +23,22 @@ export default function Sessions() {
   return (
     <Content>
       <Title>Selecione o horário</Title>
-      {sessions.days.map((session) => (
-        <Day>
-          <h1>
-            {session.weekday} - {session.date}
-          </h1>
-          {/* <div>
-            {session.showtimes.map((time) => (
-              <Link to={`/assentos/${time.id}`}>
-                <button>{time.name}</button>
-              </Link>
-            ))}
-          </div> */}
-        </Day>
-      ))}
-      <BottomBar></BottomBar>
+      {sessions.days &&
+        sessions.days.map((session) => (
+          <Day key={session.id}>
+            <h1>
+              {session.weekday} - {session.date}
+            </h1>
+            <div>
+              {session.showtimes.map((time) => (
+                <Link key={time.id} to={`/assentos/${time.id}`}>
+                  <button>{time.name}</button>
+                </Link>
+              ))}
+            </div>
+          </Day>
+        ))}
+      <Bottom poster={sessions.posterURL} title={sessions.title}></Bottom>
     </Content>
   );
 }
@@ -47,7 +48,6 @@ const Day = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-
   h1 {
     font-family: "Roboto";
     font-style: normal;
@@ -68,21 +68,5 @@ const Day = styled.div`
     border: none;
     color: #ffffff;
     margin: 5px;
-  }
-`;
-
-const BottomBar = styled.div`
-  position: fixed;
-  bottom: 0;
-  width: 375px;
-  height: 117px;
-  background: #dfe6ed;
-  border-top: 1px solid #9eadba;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  img {
-    width: 48px;
-    height: 72px;
   }
 `;
