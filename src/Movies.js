@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export default function Movies() {
-  const [itens, setItens] = useState([]);
+  const [movies, setItens] = useState([]);
 
   useEffect(() => {
     const promise = axios.get(
@@ -15,15 +16,15 @@ export default function Movies() {
     });
   }, []);
 
-  console.log(itens.posterURL);
-
   return (
     <Content>
       <Title>Selecione o filme</Title>
       <MoviesList>
-        {itens.map((item) => (
+        {movies.map((movie) => (
           <Cover>
-            <img src={item.posterURL} alt=""></img>
+            <Link to={`/sessoes/${movie.id}`}>
+              <img src={movie.posterURL} alt=""></img>
+            </Link>
           </Cover>
         ))}
       </MoviesList>
@@ -35,8 +36,18 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  position: fixed;
-  top: 67px;
+  margin-top: 67px;
+  margin-bottom: 140px;
+  box-sizing: border-box;
+  padding: auto 23px;
+`;
+
+const Title = styled.h1`
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 100px;
 `;
 
 const MoviesList = styled.div`
@@ -66,10 +77,4 @@ const Cover = styled.div`
   }
 `;
 
-const Title = styled.h1`
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 110px;
-`;
+export { Content, Title };
