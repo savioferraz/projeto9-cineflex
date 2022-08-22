@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function Bottom({ poster, title, day, time }) {
+export default function Bottom({ session, name, weekday }) {
   return (
     <BottomBar>
-      <img src={poster} alt="" />
-      <p>
-        {title} {day} {time}
-      </p>
+      <img src={session.posterURL} alt="" />
+      <div>
+        <p>{session.title}</p>
+        <span>{weekday}</span> - <span>{name}</span>
+      </div>
     </BottomBar>
   );
 }
@@ -30,7 +31,8 @@ const BottomBar = styled.div`
     border-radius: 2px;
     margin: auto 10px;
   }
-  p {
+  p,
+  span {
     font-family: "Roboto";
     font-weight: 400;
     font-size: 26px;

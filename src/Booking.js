@@ -1,37 +1,68 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Booking({}) {
+export default function Booking({ seats, session }) {
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
+  const [form, setForm] = useState({});
+  const navigate = useNavigate();
 
-  function Book() {
-    const userInfo = { name: name, cpf: cpf };
+  function handleForm(name, value) {
+    setForm({
+      ...form,
+      [name]: value,
+    });
+    console.log(form);
+  }
+
+  function sendForm() {
+    console.log(form);
+    const seatsId = seats
+      .filter((value) => value.selected)
+      .map((value) => value.id);
+    const body = {
+      ids: seatsId,
+      ...form,
+    };
+    console.log(body);
     const promise = axios.post(
       "https://mock-api.driven.com.br/api/v7/cineflex/seats/book-many",
-      userInfo
+      body
     );
 
-    promise.then(Navigate("/"));
+    promise.then((res) => {
+      console.log(res.data);
+      navigate("/sucesso", {
+        state: {
+          session,
+          form,
+          seats,
+        },
+      });
+    });
+    promise.catch((error) => {
+      console.log(error.response);
+      alert(`Opa, algo deu errado... ${error.message}`);
+    });
   }
 
   return (
-    <Form onSubmit={Book}>
-      <h1>Nome do comprador</h1>
+    <Form onSubmit={sendForm}>
+      <p>Nome do comprador</p>
       <input
         type="text"
         placeholder="Digite seu nome..."
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        name="name"
+        onChange={(e) => handleForm(e.target.name, e.target.value)}
       ></input>
-      <h1>CPF do comprador</h1>
+      <p>CPF do comprador</p>
       <input
-        type="text"
+        type="number"
         placeholder="Digite seu CPF..."
-        value={cpf}
-        onChange={(e) => setCpf(e.target.value)}
+        name="cpf"
+        onChange={(e) => handleForm(e.target.name, e.target.value)}
       ></input>
       <button type="submit">Reservar assento(s)</button>
     </Form>
@@ -46,14 +77,15 @@ const Form = styled.form`
   font-weight: 400;
   font-size: 18px;
   width: 80%;
-
+  p {
+    font-size: 24px;
+  }
   input {
     width: 320px;
     font-style: italic;
     font-weight: 400;
     font-size: 18px;
   }
-
   button {
     width: 60%;
     height: 43px;

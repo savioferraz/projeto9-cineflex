@@ -10,9 +10,12 @@ export default function Movies() {
     const promise = axios.get(
       "https://mock-api.driven.com.br/api/v7/cineflex/movies"
     );
-
     promise.then((res) => {
       setMovies(res.data);
+    });
+    promise.catch((error) => {
+      console.log(error.response);
+      alert(`Opa, algo deu errado... ${error.message}`);
     });
   }, []);
 

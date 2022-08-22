@@ -16,6 +16,10 @@ export default function Sessions() {
     promise.then((res) => {
       setSessions(res.data);
     });
+    promise.catch((error) => {
+      console.log(error.response);
+      alert(`Opa, algo deu errado... ${error.message}`);
+    });
   }, [idFilme]);
 
   console.log(sessions);
@@ -23,7 +27,9 @@ export default function Sessions() {
   return (
     <Content>
       <Title>Selecione o horário</Title>
-      {sessions.days &&
+      {!sessions.days ? (
+        <>Carregando</>
+      ) : (
         sessions.days.map((session) => (
           <Day key={session.id}>
             <h1>
@@ -37,8 +43,9 @@ export default function Sessions() {
               ))}
             </div>
           </Day>
-        ))}
-      <Bottom poster={sessions.posterURL} title={sessions.title}></Bottom>
+        ))
+      )}
+      <Bottom session={sessions}></Bottom>
     </Content>
   );
 }
